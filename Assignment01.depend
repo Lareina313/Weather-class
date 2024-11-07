@@ -1,0 +1,78 @@
+# depslib dependency file v1.0
+1728638140 source:c:\users\65917\desktop\murdoch stuff\ict283 data structures and abstractions\project folders\assignment01\date.cpp
+	"Date.h"
+
+1728638140 c:\users\65917\desktop\murdoch stuff\ict283 data structures and abstractions\project folders\assignment01\date.h
+	<iostream>
+	<string>
+
+1728543483 source:c:\users\65917\desktop\murdoch stuff\ict283 data structures and abstractions\project folders\assignment01\time.cpp
+	"Time.h"
+
+1728633157 c:\users\65917\desktop\murdoch stuff\ict283 data structures and abstractions\project folders\assignment01\time.h
+	<string>
+	<iostream>
+
+1728542133 source:c:\users\65917\desktop\murdoch stuff\ict283 data structures and abstractions\project folders\assignment01\weatherdata.cpp
+	"WeatherData.h"
+
+1728542061 c:\users\65917\desktop\murdoch stuff\ict283 data structures and abstractions\project folders\assignment01\weatherdata.h
+	"Date.h"
+	"Time.h"
+
+1728642256 source:c:\users\65917\desktop\murdoch stuff\ict283 data structures and abstractions\project folders\assignment01\main.cpp
+	"weather.h"
+	<iostream>
+	<fstream>
+
+1728633160 c:\users\65917\desktop\murdoch stuff\ict283 data structures and abstractions\project folders\assignment01\vector.h
+	<iostream>
+
+1728633160 c:\users\65917\desktop\murdoch stuff\ict283 data structures and abstractions\project folders\assignment01\weather.h
+	"date.h"
+	"time.h"
+	"vector.h"
+	<string>
+	<iostream>
+	<fstream>
+	<cmath>
+
+1728642734 source:c:\users\65917\desktop\murdoch stuff\ict283 data structures and abstractions\project folders\assignment01\weather.cpp
+	"weather.h"
+
+1728638140 source:c:\users\65917\desktop\murdoch stuff\ict283 data structures and abstractions\project folders\assignment 01\assignment01\date.cpp
+	"Date.h"
+
+1728638140 c:\users\65917\desktop\murdoch stuff\ict283 data structures and abstractions\project folders\assignment 01\assignment01\date.h
+	<iostream>
+	<string>
+
+1728543483 source:c:\users\65917\desktop\murdoch stuff\ict283 data structures and abstractions\project folders\assignment 01\assignment01\time.cpp
+	"Time.h"
+
+1728633157 c:\users\65917\desktop\murdoch stuff\ict283 data structures and abstractions\project folders\assignment 01\assignment01\time.h
+	<string>
+	<iostream>
+
+1730809636 source:c:\users\65917\desktop\murdoch stuff\ict283 data structures and abstractions\project folders\assignment 01\assignment01\weather.cpp
+	"weather.h"
+
+1728633160 c:\users\65917\desktop\murdoch stuff\ict283 data structures and abstractions\project folders\assignment 01\assignment01\weather.h
+	"date.h"
+	"time.h"
+	"vector.h"
+	<string>
+	<iostream>
+	<fstream>
+	<cmath>
+
+1730805912 c:\users\65917\desktop\murdoch stuff\ict283 data structures and abstractions\project folders\assignment 01\assignment01\vector.h
+	<iostream>
+	<vector>
+
+1730806973 source:c:\users\65917\desktop\murdoch stuff\ict283 data structures and abstractions\project folders\assignment 01\assignment01\main.cpp
+	"weather.h"
+	<iostream>
+	<fstream>
+	<string>
+
