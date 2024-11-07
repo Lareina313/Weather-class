@@ -74,17 +74,18 @@ int main()
             }
             case 3:
             {
-                int year;
-                cout << "Enter year: ";
-                cin >> year;
-                if (cin.fail())
+                int month;
+                cout << "Enter month (1-12): ";
+                cin >> month;
+
+                if (month < 1 || month > 12)
                 {
-                    cout << "Invalid input. Please enter a valid year." << endl;
+                    cout << "Invalid month. Please enter a month between 1 and 12." << endl;
                     cin.clear();
                     cin.ignore(10000, '\n');
-                } else
-                    analyzer.calculateSolarRadiation(year);
-                cout << endl;
+                    break; // Prompt for valid input
+                }
+                analyzer.calculateSPCCForMonth(month);
                 break;
             }
             case 4:
@@ -116,7 +117,7 @@ void displayMenu()
     cout << "Weather Data Analysis Menu:" << endl;
     cout << "1. Wind speed statistics for a specific month" << endl;
     cout << "2. Temperature statistics for a year" << endl;
-    cout << "3. Solar radiation totals for a year" << endl;
+    cout << "3. Calculate Sample Pearson Correlation Coefficient (sPCC) for a specific month" << endl;
     cout << "4. Generate comprehensive report (WindTempSolar.csv)" << endl;
     cout << "5. Exit" << endl;
     cout << "Enter your choice (1-5): ";

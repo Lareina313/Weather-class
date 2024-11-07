@@ -57,7 +57,7 @@
 1730809636 source:c:\users\65917\desktop\murdoch stuff\ict283 data structures and abstractions\project folders\assignment 01\assignment01\weather.cpp
 	"weather.h"
 
-1728633160 c:\users\65917\desktop\murdoch stuff\ict283 data structures and abstractions\project folders\assignment 01\assignment01\weather.h
+1730998264 c:\users\65917\desktop\murdoch stuff\ict283 data structures and abstractions\project folders\assignment 01\assignment01\weather.h
 	"date.h"
 	"time.h"
 	"vector.h"
@@ -65,14 +65,19 @@
 	<iostream>
 	<fstream>
 	<cmath>
+	<map>
+	"bst.h"
 
 1730805912 c:\users\65917\desktop\murdoch stuff\ict283 data structures and abstractions\project folders\assignment 01\assignment01\vector.h
 	<iostream>
 	<vector>
 
-1730806973 source:c:\users\65917\desktop\murdoch stuff\ict283 data structures and abstractions\project folders\assignment 01\assignment01\main.cpp
+1730993209 source:c:\users\65917\desktop\murdoch stuff\ict283 data structures and abstractions\project folders\assignment 01\assignment01\main.cpp
 	"weather.h"
 	<iostream>
 	<fstream>
 	<string>
+
+1730994723 c:\users\65917\desktop\murdoch stuff\ict283 data structures and abstractions\project folders\assignment 01\assignment01\bst.h
+	<iostream>
 

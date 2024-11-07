@@ -101,11 +101,11 @@ void Bst<T>::insert(T value)
 template <class T>
 Node<T>* Bst<T>::insertRecursive(Node<T>* node, T value)
 {
-    if (node == nullptr) {
+    if (node == nullptr)
         return new Node<T>(value);  // Create new node if reached empty spot
-    }
 
-    if (value < node->data) {
+    if (value < node->data)
+        {
         node->left = insertRecursive(node->left, value);  // Go left if value is smaller
     } else {
         node->right = insertRecursive(node->right, value);  // Go right if value is larger or equal

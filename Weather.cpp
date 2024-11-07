@@ -112,6 +112,11 @@ bool Weather::loadDataFromFile(const string& filename)
     return true;
 }
 
+void Weather::insertIntoBST(const WeatherData& data)
+{
+    m_bst.insert(data);
+}
+
 void Weather::calculateWindStats(int month, int year)
 {
     Vector<WeatherData> monthData = getDataForMonth(month, year);
@@ -152,6 +157,69 @@ double Weather::calculateStdev(const Vector<float>& values, double mean)
         sumSquares += diff * diff;
     }
     return sqrt(sumSquares / (values.size() - 1));
+}
+
+double Weather::calculateSPCC(const Vector<float>& x, const Vector<float>& y)
+{
+    double sum_x = 0.0, sum_y = 0.0, sum_xy = 0.0, sum_x2 = 0.0, sum_y2 = 0.0;
+
+    for (int i = 0; i < x.size(); i++)
+    {
+        sum_x += x[i];        // Sum of x
+        sum_y += y[i];        // Sum of y
+        sum_xy += x[i] * y[i]; // Sum of x * y
+        sum_x2 += x[i] * x[i]; // Sum of x^2
+        sum_y2 += y[i] * y[i]; // Sum of y^2
+    }
+
+    double numerator = x.size() * sum_xy - sum_x * sum_y;
+    double denominator = sqrt((x.size() * sum_x2 - sum_x * sum_x) * (x.size() * sum_y2 - sum_y * sum_y));
+
+    if (denominator == 0)
+        return 0;
+
+    return numerator / denominator;
+}
+
+void Weather::calculateSPCCForMonth(int month)
+{
+    Vector<float> wind_speed;
+    Vector<float> temp;
+    Vector<float> solar_radiation;
+
+    for (int i = 0; i < m_data.size(); i++)
+    {
+        WeatherData data = m_data[i];
+        if (data.date.GetMonth() == month)
+        {
+            wind_speed.Add(data.windSpeed);
+            temp.Add(data.temperature);
+            solar_radiation.Add(data.solarRadiation);
+        }
+    }
+
+    double s_t = calculateSPCC(wind_speed, temp);
+    double s_r = calculateSPCC(wind_speed, solar_radiation);
+    double t_r = calculateSPCC(temp, solar_radiation);
+
+    // Output the results
+    cout << "Sample Pearson Correlation Coefficient for " << Date().SetMonthName(month) << endl;
+    cout << "S_T: " << s_t << endl;
+    cout << "S_R: " << s_r << endl;
+    cout << "T_R: " << t_r << endl;
+
+}
+
+Vector<WeatherData> Weather::getDataForMonth(int month)
+{
+    Vector<WeatherData> monthData;
+    for (int i = 0; i < m_data.size(); i++) {
+        // Only filter by the month, not the year
+        if (m_data[i].date.GetMonth() == month) {
+            monthData.Add(m_data[i]);
+        }
+    }
+    return monthData;
 }
 
 Vector<WeatherData> Weather::getDataForMonth(int month, int year)
