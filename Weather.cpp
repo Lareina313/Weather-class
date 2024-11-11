@@ -311,6 +311,18 @@ void Weather::calculateSolarRadiation(int year)
     }
 }
 
+double Weather::calculateMAD(const Vector<float>& values, double mean)
+{
+    if (values.isEmpty())
+        return 0;
+    double sumAbsDiff = 0;
+    for (int i = 0; i < values.size(); i++)
+    {
+        sumAbsDiff += abs(values[i] - mean);
+    }
+    return sumAbsDiff / values.size();
+}
+
 void Weather::writeWindTempSolar(int year)
 {
     ofstream outFile("WindTempSolar.csv");
@@ -330,7 +342,7 @@ void Weather::writeWindTempSolar(int year)
 
     // Write the year header
     outFile << year << endl;
-    outFile << "Month,Average Wind Speed(stdev),Average Ambient Temperature(stdev),Solar Radiation" << endl;
+    outFile << "Month,\"Average Wind Speed(stdev, mad)\",\"Average Ambient Temperature(stdev, mad)\",Solar Radiation" << endl;
 
     // Process each month
     for (int month = 1; month <= 12; month++)
@@ -373,7 +385,8 @@ void Weather::writeWindTempSolar(int year)
         {
             double windMean = calculateMean(windSpeeds);
             double windStdev = calculateStdev(windSpeeds, windMean);
-            outFile << windMean << "(" << windStdev << ")";
+            double windMAD = calculateMAD(windSpeeds, windMean);
+            outFile << "\"" << windMean << "(" << windStdev << ", " << windMAD << ")\"";
         }
         outFile << ",";
 
@@ -382,7 +395,8 @@ void Weather::writeWindTempSolar(int year)
         {
             double tempMean = calculateMean(temperatures);
             double tempStdev = calculateStdev(temperatures, tempMean);
-            outFile << tempMean << "(" << tempStdev << ")";
+            double tempMAD = calculateMAD(temperatures, tempMean);
+            outFile << "\"" << tempMean << "(" << tempStdev << ", " << tempMAD << ")\"";
         }
         outFile << ",";
 

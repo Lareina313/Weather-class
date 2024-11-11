@@ -38,6 +38,9 @@
 		<Unit filename="Date.h">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
+		<Unit filename="Map.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="Time.cpp" />
 		<Unit filename="Time.h">
 			<Option target="&lt;{~None~}&gt;" />

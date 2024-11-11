@@ -2,7 +2,6 @@
 #define DATE_H_INCLUDED
 
 #include <iostream>
-#include <string>
 
 using std::istream;
 using std::ostream;

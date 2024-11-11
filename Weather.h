@@ -51,6 +51,7 @@ private:
     double calculateMean(const Vector<float>& values);
     double calculateStdev(const Vector<float>& values, double mean);
     double calculateSPCC(const Vector<float>& x, const Vector<float>& y);
+    double calculateMAD(const Vector<float>& values, double mean);
 
     Vector<WeatherData> getDataForMonth(int month);
     Vector<WeatherData> getDataForMonth(int month, int year);
