@@ -42,21 +42,23 @@ void Date::SetYear(int year)
 
 string Date::SetMonthName(int month)
 {
-    switch (month) {
-        case 1:  return "January";
-        case 2:  return "February";
-        case 3:  return "March";
-        case 4:  return "April";
-        case 5:  return "May";
-        case 6:  return "June";
-        case 7:  return "July";
-        case 8:  return "August";
-        case 9:  return "September";
-        case 10: return "October";
-        case 11: return "November";
-        case 12: return "December";
-        default: return "Invalid Month";
-    }
+    Map<int, string> monthMap;
+    monthMap.insert(1, "January");
+    monthMap.insert(2, "February");
+    monthMap.insert(3, "March");
+    monthMap.insert(4, "April");
+    monthMap.insert(5, "May");
+    monthMap.insert(6, "June");
+    monthMap.insert(7, "July");
+    monthMap.insert(8, "August");
+    monthMap.insert(9, "September");
+    monthMap.insert(10, "October");
+    monthMap.insert(11, "November");
+    monthMap.insert(12, "December");
+     if (monthMap.exists(month))
+        return monthMap.get(month);
+     else
+        return "Invalid Month";
 }
 
 bool Date::isValid() const
@@ -66,6 +68,28 @@ bool Date::isValid() const
     if (m_month == 2 && m_day > 29) return false;   // Handle February
     return true;
 }
+
+bool Date::operator<(const Date& other) const
+{
+        if (this->m_year < other.m_year)
+            return true;
+        if (this->m_year == other.m_year)
+        {
+            if (this->m_month < other.m_month)
+                return true;
+            if (this->m_month == other.m_month)
+                return this->m_day < other.m_day;
+        }
+        return false;
+}
+
+bool Date::operator==(const Date& other) const
+{
+    return this->m_year == other.m_year &&
+           this->m_month == other.m_month &&
+           this->m_day == other.m_day;
+}
+
 ostream& operator<<(ostream& os, const Date& date)
 {
     os << date.GetDay() << "/" << date.GetMonth() << "/" << date.GetYear();

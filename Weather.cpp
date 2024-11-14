@@ -3,6 +3,7 @@
 
 Weather::Weather()
 {
+    Vector<WeatherData> m_data;
     Date date;
     Time time;
     float windSpeed = 0.0;
@@ -94,11 +95,14 @@ bool Weather::loadDataFromFile(const string& filename)
             data.time = Time(hour, minute);
 
             // Parse measurements
-
             if (!cells[windIndex].empty() && cells[windIndex] != "N/A")
+            {
                 data.windSpeed = stof(cells[windIndex]);
+            }
             if (!cells[tempIndex].empty() && cells[tempIndex] != "N/A")
+            {
                 data.temperature = stof(cells[tempIndex]);
+            }
             if (!cells[solarIndex].empty() && cells[solarIndex] != "N/A")
             {
                 float solar = stof(cells[solarIndex]);
@@ -108,14 +112,27 @@ bool Weather::loadDataFromFile(const string& filename)
             m_data.Add(data);
         }
     }
-
     return true;
 }
 
-void Weather::insertIntoBST(const WeatherData& data)
+Vector<float> Weather::bstToVector(Bst<float>& bst) const
 {
-    m_bst.insert(data);
+    Vector<float> result;
+    inOrderToVector(bst.getRoot(), result);
+    return result;
 }
+
+// Recursive helper function for in-order traversal
+void Weather::inOrderToVector(Node<float>* node, Vector<float>& vec) const
+{
+    if (node != nullptr)
+    {
+        inOrderToVector(node->left, vec);
+        vec.Add(node->data);
+        inOrderToVector(node->right, vec);
+    }
+}
+
 
 void Weather::calculateWindStats(int month, int year)
 {
@@ -126,30 +143,32 @@ void Weather::calculateWindStats(int month, int year)
         return;
     }
 
-    Vector<float> speeds;
+    Bst<float> monthWindBST;
     for (int i = 0; i < monthData.size(); i++)
-        speeds.Add(monthData[i].windSpeed * 3.6); // Convert to km/h
-
-    double mean = calculateMean(speeds);
-    double stdev = calculateStdev(speeds, mean);
+    {
+        monthWindBST.insert(monthData[i].windSpeed * 3.6); // Convert to km/h
+    }
+    double mean = calculateMean(monthWindBST);
+    double stdev = calculateStdev(monthWindBST, mean);
 
     cout << Date().SetMonthName(month) << " " << year << ":" << endl;
     cout << "Average speed: " << mean << " km/h" << endl;
     cout << "Sample stdev: " << stdev << endl;
 }
 
-double Weather::calculateMean(const Vector<float>& values)
+double Weather::calculateMean(Bst<float>& bst)
 {
-    if (values.isEmpty()) return 0;
-    double sum = 0;
-    for (int i = 0; i < values.size(); i++)
-        sum += values[i];
-    return sum / values.size();
+    int count = bst.count();
+    if (count == 0) return 0; // No data in BST
+    double sum = bst.sum();
+    return sum / count;
 }
 
-double Weather::calculateStdev(const Vector<float>& values, double mean)
+double Weather::calculateStdev(Bst<float>& bst, double mean)
 {
-    if (values.size() < 2) return 0;
+    Vector<float> values = bstToVector(bst); // Convert bst to vector for easier variance calculation to each values
+    if (values.size() < 2)
+        return 0;
     double sumSquares = 0;
     for (int i = 0; i < values.size(); i++)
     {
@@ -161,7 +180,11 @@ double Weather::calculateStdev(const Vector<float>& values, double mean)
 
 double Weather::calculateSPCC(const Vector<float>& x, const Vector<float>& y)
 {
-    double sum_x = 0.0, sum_y = 0.0, sum_xy = 0.0, sum_x2 = 0.0, sum_y2 = 0.0;
+    double sum_x = 0.0;
+    double sum_y = 0.0;
+    double sum_xy = 0.0;
+    double sum_x2 = 0.0;
+    double sum_y2 = 0.0;
 
     for (int i = 0; i < x.size(); i++)
     {
@@ -210,18 +233,6 @@ void Weather::calculateSPCCForMonth(int month)
 
 }
 
-Vector<WeatherData> Weather::getDataForMonth(int month)
-{
-    Vector<WeatherData> monthData;
-    for (int i = 0; i < m_data.size(); i++) {
-        // Only filter by the month, not the year
-        if (m_data[i].date.GetMonth() == month) {
-            monthData.Add(m_data[i]);
-        }
-    }
-    return monthData;
-}
-
 Vector<WeatherData> Weather::getDataForMonth(int month, int year)
 {
     Vector<WeatherData> monthData;
@@ -254,21 +265,22 @@ void Weather::calculateTempStats(int year)
     }
 
     cout << year << endl;
-
     // Process each month
     for (int month = 1; month <= 12; month++)
     {
-        Vector<float> temperatures;
+        Bst<float> yearTempBST;
         Vector<WeatherData> monthData = getDataForMonth(month, year);
 
         // Collect valid temperature readings for the month
         for (int i = 0; i < monthData.size(); i++)
-            temperatures.Add(monthData[i].temperature);
-
-        if (!temperatures.isEmpty())
         {
-            double mean = calculateMean(temperatures);
-            double stdev = calculateStdev(temperatures, mean);
+            yearTempBST.insert(monthData[i].temperature);
+        }
+
+        if (yearTempBST.count() > 0)
+        {
+            double mean = calculateMean(yearTempBST);
+            double stdev = calculateStdev(yearTempBST, mean);
             cout << Date().SetMonthName(month) << ": average: " << mean << " degrees C, stdev: " << stdev << endl;
         } else
             cout << Date().SetMonthName(month) << ": No Data" << endl;
@@ -311,8 +323,9 @@ void Weather::calculateSolarRadiation(int year)
     }
 }
 
-double Weather::calculateMAD(const Vector<float>& values, double mean)
+double Weather::calculateMAD(Bst<float>& bst, double mean)
 {
+    Vector<float> values = bstToVector(bst);
     if (values.isEmpty())
         return 0;
     double sumAbsDiff = 0;
@@ -350,8 +363,8 @@ void Weather::writeWindTempSolar(int year)
         Vector<WeatherData> monthData = getDataForMonth(month, year);
         if (monthData.isEmpty()) continue; // Skip months with no data
 
-        Vector<float> windSpeeds;
-        Vector<float> temperatures;
+        Bst<float> windSpeedBst;
+        Bst<float> temperatureBst;
         float totalRadiation = 0.0f;
         bool hasWind = false, hasTemp = false, hasSolar = false;
 
@@ -361,12 +374,12 @@ void Weather::writeWindTempSolar(int year)
             // Wind speed
             if (monthData[i].windSpeed >= 0)
             {
-                windSpeeds.Add(monthData[i].windSpeed * 3.6); // Convert to km/h
+                windSpeedBst.insert(monthData[i].windSpeed * 3.6); // Convert to km/h
                 hasWind = true;
             }
 
             // Temperature
-            temperatures.Add(monthData[i].temperature);
+            temperatureBst.insert(monthData[i].temperature);
             hasTemp = true;
 
             // Solar radiation
@@ -383,9 +396,9 @@ void Weather::writeWindTempSolar(int year)
         // Wind speed stats
         if (hasWind)
         {
-            double windMean = calculateMean(windSpeeds);
-            double windStdev = calculateStdev(windSpeeds, windMean);
-            double windMAD = calculateMAD(windSpeeds, windMean);
+            double windMean = calculateMean(windSpeedBst);
+            double windStdev = calculateStdev(windSpeedBst, windMean);
+            double windMAD = calculateMAD(windSpeedBst, windMean);
             outFile << "\"" << windMean << "(" << windStdev << ", " << windMAD << ")\"";
         }
         outFile << ",";
@@ -393,9 +406,9 @@ void Weather::writeWindTempSolar(int year)
         // Temperature stats
         if (hasTemp)
         {
-            double tempMean = calculateMean(temperatures);
-            double tempStdev = calculateStdev(temperatures, tempMean);
-            double tempMAD = calculateMAD(temperatures, tempMean);
+            double tempMean = calculateMean(temperatureBst);
+            double tempStdev = calculateStdev(temperatureBst, tempMean);
+            double tempMAD = calculateMAD(temperatureBst, tempMean);
             outFile << "\"" << tempMean << "(" << tempStdev << ", " << tempMAD << ")\"";
         }
         outFile << ",";

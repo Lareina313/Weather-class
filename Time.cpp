@@ -49,6 +49,16 @@ string Time::toString() const
 {
     return to_string(m_hour) + ":" + to_string(m_minute);
 }
+
+bool Time::operator<(const Time& other) const
+{
+    if (this->m_hour < other.m_hour)
+        return true;
+    else if (this->m_hour == other.m_hour)
+        return this->m_minute < other.m_minute;
+    return false;
+}
+
 ostream& operator<<(ostream& os, const Time& t)
 {
     os << t.toString();

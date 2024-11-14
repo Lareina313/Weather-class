@@ -7,8 +7,8 @@ using std::cout;
 using std::endl;
 using std::string;
 
-void displayMenu();
 bool loadDataFiles(Weather& analyzer);
+void displayMenu();
 
 int main()
 {
