@@ -130,7 +130,7 @@ bool loadDataFiles(Weather& analyzer)
 
     if (!sourceFile)
     {
-        cout << "Error: Cannot open data_source.txt in data directory" << endl;
+        cout << "Error: Cannot find or open data_source.txt in data directory" << endl;
         return false;
     }
 
